@@ -29,7 +29,7 @@ async function main() {
         const channelPhotoPath = saveChannelPhoto(file, imagesFolderName);
 
         const messages = await tgService.getChannelMessagesFromDate(channel, startDate);
-
+        if (messages.length === 0) { continue; }
         // TODO: add forwarding info
         const channelMessagesToPost: IChannelMessageSummaryData[] = [];
         const messagesData = getMessagesData(channel, messages);
