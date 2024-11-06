@@ -3,8 +3,8 @@ name: Launch Message Agregation
 on:
   schedule:
     # Run at 10am every Wednesday and Saturday
-    - cron: '30 10 * * 3'  # Wednesday at 10am UTC
-    - cron: '0 10 * * 6'  # Saturday at 10am UTC
+    - cron: '35 11 * * 3'  # Wednesday at 10am UTC
+    - cron: '0 11 * * 6'  # Saturday at 10am UTC
 
 jobs:
   run_script:
@@ -30,14 +30,14 @@ jobs:
         run: npm install
 
       - name: Wednesday Agregation
-        if: github.event.schedule == '30 10 * * 3'
+        if: github.event.schedule == '35 11 * * 3'
         env:
-          TG_API_ID: '4'
+          DAYS_TO_PARSE: '4'
 
         run: npm start
 
       - name: Saturday Agregation
         if: github.event.schedule == '0 10 * * 6'
         env:
-          DAYS: '3'
+          DAYS_TO_PARSE: '3'
         run: npm start
