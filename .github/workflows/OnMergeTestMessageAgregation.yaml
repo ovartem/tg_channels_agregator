@@ -30,4 +30,4 @@ jobs:
         run: npm install
 
       - name: Run Node.js script
-        run: node start
+        run: npm start
