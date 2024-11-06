@@ -1,0 +1,43 @@
+name: Launch Message Agregation
+
+on:
+  schedule:
+    # Run at 10am every Wednesday and Saturday
+    - cron: '0 13 * * 3'  # Wednesday at 10am UTC
+    - cron: '0 10 * * 6'  # Saturday at 10am UTC
+
+jobs:
+  run_script:
+    runs-on: ubuntu-latest
+
+    env:
+      TG_API_ID: ${{ secrets.TG_API_ID }}
+      TG_API_HASH: ${{ secrets.TG_API_HASH }}
+      TG_SESSION_STRING: ${{ secrets.TG_SESSION_STRING }}
+      GPT_API_KEY: ${{ secrets.GPT_API_KEY }}
+      CHANNEL_NAME: "AOV Test Channel"  # Replace with the actual channel name
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Wednesday Agregation
+        if: github.event.schedule == '0 13 * * 3'
+        env:
+          TG_API_ID: '4'
+
+        run: npm start
+
+      - name: Saturday Agregation
+        if: github.event.schedule == '0 10 * * 6'
+        env:
+          DAYS: '3'
+        run: npm start
