@@ -66,6 +66,7 @@ export class TgService {
         const messages = await this.client.getMessages(channel as any, {
             limit: 30,
         });
+        console.log('Messages retrived successfully');
         const filteredMessages = messages.filter(message => {
             const sentDuringPeriod = message.date > Math.floor(startDate.getTime() / 1000);
             return sentDuringPeriod;
