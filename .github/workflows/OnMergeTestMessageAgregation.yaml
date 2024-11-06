@@ -16,6 +16,7 @@ jobs:
       GPT_API_KEY: ${{ secrets.GPT_API_KEY }}
       CHANNEL_NAME: "me"  # Replace with the actual channel name
       DAYS_TO_PARSE: '2'
+      ON_MERGE: true
 
     steps:
       - name: Checkout repository

@@ -15,7 +15,7 @@ jobs:
       TG_API_HASH: ${{ secrets.TG_API_HASH }}
       TG_SESSION_STRING: ${{ secrets.TG_SESSION_STRING }}
       GPT_API_KEY: ${{ secrets.GPT_API_KEY }}
-      CHANNEL_NAME: "AOV Test Channel"  # Replace with the actual channel name
+      CHANNEL_NAME: "Yet Another Useful Channel"  # Replace with the actual channel name
 
     steps:
       - name: Checkout repository
