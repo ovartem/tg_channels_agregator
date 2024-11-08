@@ -2,7 +2,7 @@ import axios from "axios";
 import { config } from "../../config";
 
 export async function gptGetMessageSummary(message: string): Promise<string> {
-    const prompt = `Напиши коротке резюме (1-2) речення для наступного повідомлення: "${message}". Якщо повідомлення порожнє або гумористичним, поверни порожній рядок без додаткових пояснень.`;
+    const prompt = `Напиши коротке резюме (1-2) речення для наступного повідомлення: "${message}". Не переписуй текст, а коротко опиши основну думку чи висновок. Якщо повідомлення порожнє або гумористичним, поверни порожній рядок без додаткових пояснень.`;
     const response = await axios.post(
         "https://api.openai.com/v1/chat/completions",
         {

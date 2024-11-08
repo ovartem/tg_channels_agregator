@@ -53,20 +53,20 @@ export function getMessagesData(channel: Dialog, messages: TotalList<Api.Message
 }
 
 export function getInitialMessage(): string {
-    return `     <b>YetAnotherNews 🇺🇦:\n головне з тестування за ${config.daysToParse} дні! 👇</b>\n\n`;
+    return `     <b>YetAnotherNews 🇺🇦:\n    головне з тестування за ${config.daysToParse} дні! 👇</b>\n\n`;
 }
 
 function formatMessage(data: IChannelMessageSummaryData): string {
     return `🎯: ${data.summary}\n🔗 <a href="${data.link}">Читати детальніше</a> \n\n`;// 
 }
 
-export function combineMessages(messages: IChannelMessageSummaryData[]): string[] {
+export function combineMessagesByChannels(messages: IChannelMessageSummaryData[]): string[] {
     const combinedMessages: string[] = [];
     let currentMessage = '';
     const channelName = messages.length > 0 ? messages[0].channelName : ''; // Get channel name from the first message
 
     // Заголовок з назвою каналу
-    let channelContent = `<b>${channelName}</b>\n\n`;
+    let channelContent = `|   <b>${channelName}</b>   |\n\n`;
     currentMessage = channelContent;
     for (const message of messages) {
         if (message.summary === '' || message.summary.includes('гумор')) {
@@ -91,6 +91,30 @@ export function combineMessages(messages: IChannelMessageSummaryData[]): string[
     }
 
     return combinedMessages;
+}
+
+export function combineMessagesForDifferentChannels(messages: string[]): string[] {
+    const result: string[] = [];
+    let currentMessage = '';
+
+    for (const msg of messages) {
+        // Check if adding the new string would exceed the maximum length
+        if ((currentMessage + msg + '\n\n').length > MAX_MESSAGE_LENGTH) {
+            // Push the current message to the result and start a new one
+            result.push(currentMessage.trim());
+            currentMessage = msg;
+        } else {
+            // Append the string to the current message with the separator
+            currentMessage += (currentMessage ? '\n\n' : '') + msg;
+        }
+    }
+
+    // Push the last message if it has content
+    if (currentMessage.trim()) {
+        result.push(currentMessage.trim());
+    }
+
+    return result;
 }
 
 

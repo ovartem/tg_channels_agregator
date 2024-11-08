@@ -1,5 +1,5 @@
 import { TgService } from "./tgClient/TgService";
-import { combineMessages, getAllChannelsByNames, getInitialMessage, getMessagesData, IChannelMessageSummaryData } from "./tgClient/tgUtils";
+import { combineMessagesByChannels, combineMessagesForDifferentChannels, getAllChannelsByNames, getInitialMessage, getMessagesData, IChannelMessageSummaryData } from "./tgClient/tgUtils";
 import { gptGetMessageSummary } from "./tgClient/GptService";
 import { config } from "../config";
 import { createFolderIfNotCreated, saveChannelPhoto } from "./imageUtils/imageUtils";
@@ -20,13 +20,11 @@ async function main() {
 
     const filteredChannels = getAllChannelsByNames(channels, channelsNames);
 
-    // Send initial message to the channel
-    const initialMessage = getInitialMessage();
-    await tgService.sendMessage(initialMessage);
+    const combinedMessages: string[] = [getInitialMessage()];
 
     for (const channel of filteredChannels) {
-        const file = await tgService.getPhoto(channel);
-        const channelPhotoPath = saveChannelPhoto(file, imagesFolderName);
+        // const file = await tgService.getPhoto(channel);
+        // const channelPhotoPath = saveChannelPhoto(file, imagesFolderName);
 
         const messages = await tgService.getChannelMessagesFromDate(channel, startDate);
         if (messages.length === 0) { continue; }
@@ -41,11 +39,12 @@ async function main() {
                 link: messageData.messageLink,
             });
         }
-        const combinedMessages = combineMessages(channelMessagesToPost);
-        for (const message of combinedMessages) {
-            await tgService.sendFile(message, channelPhotoPath);
-            console.log(`Posted combined message:\n${message}`);
-        }
+        combinedMessages.push(...combineMessagesByChannels(channelMessagesToPost));
+    }
+
+    for (const message of combineMessagesForDifferentChannels(combinedMessages)) {
+        await tgService.sendMessage(message);
+        console.log(`Posted combined message:\n${message}`);
     }
 
     await tgService.disconnect();
